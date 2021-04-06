@@ -2,9 +2,11 @@
 import sys
 import subprocess
 import pip
+import tempfile
+import queue
 
-#On installe les dépendances si ce n'est pas fait puis on les importe
-bibliotheques=['tempfile','queue','numpy','soundfile as sf','sounddevice as sd', 'cv2']
+#On installe les dépendances non-standards si ce n'est pas fait puis on les importe
+bibliotheques=['numpy','soundfile as sf','sounddevice as sd', 'cv2']
 importer = ['import '] * len(bibliotheques)
 final=[a+str(b) for a,b in zip(importer,bibliotheques)]
 
@@ -12,7 +14,7 @@ for i in final:
 	try:
 		exec(i)
 	except ImportError:
-		subprocess.check_call([sys.executable, "-m", "pip", "install", i.split(" ")[1]])
+		subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python" if i.split(" ")[1]=="cv2" else i.split(" ")[1]])
 		exec(i)
  
  
