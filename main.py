@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+#Réalisé par Quentin Guardia, M1 Cybersécurité FI
+
 import sys
 import subprocess
 import pip
@@ -17,40 +20,43 @@ for i in final:
 		subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python" if i.split(" ")[1]=="cv2" else i.split(" ")[1]])
 		exec(i)
  
- 
+
 #queue (FIFO) pour l'audio
 q = queue.Queue()
 
 
 #On ajoute l'audio à la queue si pas d'erreur
-def callback(indata, frames, temps, erreur):
+def callback(in_data, frames, temps, erreur):
 	if erreur:
 		print(erreur, file=sys.stderr)
-	q.put(indata.copy())
+	q.put(in_data.copy())
 	
 	
-#Boucle principale, tourne à l'infini
+#Boucle principale, tourne à l'infini. Choix entre micro, webcam, quitter.
 def boucle():
 	while(1):
-		print("_" * 50 + "\n1) Enregistrement audio\n2) Allumer la webcam\n3) Quitter\n");
+		print("_" * 50 + "\n\n1) Enregistrement audio\n2) Allumer la webcam\n3) Quitter\n");
 		entree=input("Le numéro de votre option:")
 		try:
 			int(entree)
 		except ValueError:
 			print("Option inexistante\n")
-			boucle()
+			return boucle()
 
 		if(int(entree)==1):
 			micro()
 		elif(int(entree)==2):
 			webcam()
 		elif(int(entree)==3):
+			print("Au revoir!")
 			exit(0)
 		else:
 			print("Option inexistante\n")
-			boucle()
+			return boucle()
+
 
 #Enregistrement, sans limite de durée grâce au callback, s'arrête grâce à Ctrl+C
+#Fichier audio enregistré dans le même dossier
 def micro():
 	try:
 		info = sd.query_devices(None, 'input')
@@ -59,7 +65,7 @@ def micro():
 				
 		with sf.SoundFile(fichier, mode='x',  channels=1, samplerate=freq) as file:
 			with sd.InputStream(channels=1, callback=callback):
-				print('Ctrl+C pour arrêter l\'enregistrement')
+				print('Enregistrement en cours. Ctrl+C pour arrêter')
 				while True:
 					file.write(q.get())
 
@@ -67,27 +73,36 @@ def micro():
 		print('\nEnregistré sous: ' + repr(fichier) + '\n')
 		boucle()
 	except Exception as e:
+		print("\nVérifier le micro!");
 		exit(str(e))
 
 
 #Allume la webcam, jusqu'à ce que la fenêtre se ferme
 def webcam():
-	cv2.namedWindow("Video")
+	cv2.namedWindow("webcam")
 	vc = cv2.VideoCapture(0)
 
 	if vc.isOpened():
-		rval, frame = vc.read()
+		rval, trame = vc.read()
 	else:
 		rval = False
 
 	while True:
-		cv2.imshow('webcam',frame)
-		rval, frame = vc.read()
+		try:
+			cv2.imshow('webcam',trame)
+		except Exception as e:
+			print("\nVérifier la caméra!");
+			exit(str(e))
+		rval, trame = vc.read()
 		k = cv2.waitKey(20)      
 		if cv2.getWindowProperty('webcam',cv2.WND_PROP_VISIBLE) < 1:        
 			break 
 	vc.release()       
 	cv2.destroyAllWindows()
 
+
 #On appelle la boucle principale
-boucle()
+try:
+	boucle()
+except KeyboardInterrupt:
+	print("\nAu revoir !")
