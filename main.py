@@ -2,7 +2,7 @@
 
 #Réalisé par Quentin Guardia, M1 Cybersécurité FI
 #Objectifs: enregistrer depuis le microphone et allumer la webcam
-#Activation du microphone et de la webcam requis
+#Activation du microphone et de la webcam requise. Fonctionne sous Linux
 
 import sys
 import subprocess
