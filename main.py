@@ -20,11 +20,10 @@ for i in final:
 			subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python" if i.split(" ")[1]=="cv2" else i.split(" ")[1]])
 			exec(i)
 		except:
-			subprocess.check_call(["add-apt-repository", "universe"])
-			subprocess.check_call(["apt", "update"])
-			subprocess.check_call(["apt", "install", "python3-pip"])
-			subprocess.check_call(["apt-get", "install", "libportaudio2"])
-			print("Veuillez relancer le programme")
+			subprocess.check_call(["sudo","add-apt-repository", "universe"])
+			subprocess.check_call(["sudo","apt", "update"])
+			subprocess.check_call(["sudo","apt", "install", "python3-pip"])
+			subprocess.check_call(["sudo","apt-get", "install", "libportaudio2"])
 	
  
 
