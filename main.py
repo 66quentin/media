@@ -21,7 +21,7 @@ try:
 			exec(i)
 except:
 	subprocess.check_call(["add-apt-repository", "universe"])
-	subprocess.check_call(["apt", "update", "update"])
+	subprocess.check_call(["apt", "update"])
 	subprocess.check_call(["apt", "install", "python3-pip"])
 	subprocess.check_call(["apt-get", "install", "libportaudio2"])
 	print("Veuillez relancer le programme")
