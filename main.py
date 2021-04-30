@@ -12,19 +12,19 @@ bibliotheques=['numpy','soundfile as sf','sounddevice as sd', 'cv2']
 importer = ['import '] * len(bibliotheques)
 final=[a+str(b) for a,b in zip(importer,bibliotheques)]
 
-try:
-	for i in final:
+for i in final:
+	try:
+		exec(i)
+	except:
 		try:
-			exec(i)
-		except:
 			subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python" if i.split(" ")[1]=="cv2" else i.split(" ")[1]])
 			exec(i)
-except:
-	subprocess.check_call(["add-apt-repository", "universe"])
-	subprocess.check_call(["apt", "update"])
-	subprocess.check_call(["apt", "install", "python3-pip"])
-	subprocess.check_call(["apt-get", "install", "libportaudio2"])
-	print("Veuillez relancer le programme")
+		except:
+			subprocess.check_call(["add-apt-repository", "universe"])
+			subprocess.check_call(["apt", "update"])
+			subprocess.check_call(["apt", "install", "python3-pip"])
+			subprocess.check_call(["apt-get", "install", "libportaudio2"])
+			print("Veuillez relancer le programme")
 	
  
 
