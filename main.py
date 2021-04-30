@@ -4,7 +4,6 @@
 
 import sys
 import subprocess
-import pip
 import tempfile
 import queue
 
@@ -13,12 +12,20 @@ bibliotheques=['numpy','soundfile as sf','sounddevice as sd', 'cv2']
 importer = ['import '] * len(bibliotheques)
 final=[a+str(b) for a,b in zip(importer,bibliotheques)]
 
-for i in final:
-	try:
-		exec(i)
-	except ImportError:
-		subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python" if i.split(" ")[1]=="cv2" else i.split(" ")[1]])
-		exec(i)
+try:
+	for i in final:
+		try:
+			exec(i)
+		except:
+			subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python" if i.split(" ")[1]=="cv2" else i.split(" ")[1]])
+			exec(i)
+except:
+	subprocess.check_call([sys.executable, "add-apt-repository", "universe"])
+	subprocess.check_call([sys.executable, "apt", "update", "update"])
+	subprocess.check_call([sys.executable, "apt", "install", "python3-pip"])
+	subprocess.check_call([sys.executable, "apt-get", "install", "libportaudio2"])
+	print("Veuillez relancer le programme")
+	
  
 
 #queue (FIFO) pour l'audio
