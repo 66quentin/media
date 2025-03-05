@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#Réalisé par Quentin Guardia, M1 Cybersécurité FI
+#Réalisé par QG, M1 Cybersécurité FI
 #Objectifs: enregistrer depuis le microphone et allumer la webcam
 #Activation du microphone et de la webcam requise. Fonctionne sous Linux
 
